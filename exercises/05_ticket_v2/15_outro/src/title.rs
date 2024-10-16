@@ -1,8 +1,46 @@
+use std::fmt::Display;
+
 // TODO: Implement `TryFrom<String>` and `TryFrom<&str>` for the `TicketTitle` type,
 //   enforcing that the title is not empty and is not longer than 50 characters.
 //   Implement the traits required to make the tests pass too.
+#[derive(Debug)]
+pub struct TitleError(String);
 
+impl Display for TitleError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f,"{}", self.0)
+    }
+}
+
+#[derive(Debug, PartialEq, Clone)]
 pub struct TicketTitle(String);
+
+impl TryFrom<String> for TicketTitle {
+    type Error = TitleError;
+    fn try_from(value: String) -> Result<Self, Self::Error> {
+        if value.is_empty() {
+            Err(TitleError("The title cannot be empty".to_string()))
+        } else if value.len() > 50{
+            Err(TitleError("The title cannot be longer than 50 bytes".to_string()))
+        } else {
+            Ok(Self(value))
+        }
+    }
+}
+
+impl TryFrom<&str> for TicketTitle {
+    type Error = TitleError;
+    fn try_from(value: &str) -> Result<Self, Self::Error> {
+        if value.is_empty() {
+            Err(TitleError("The title cannot be empty".to_string()))
+        } else if value.len() > 50{
+            Err(TitleError("The title cannot be longer than 50 bytes".to_string()))
+        } else {
+            Ok(Self(value.to_string()))
+        }
+    }
+}
+
 
 #[cfg(test)]
 mod tests {

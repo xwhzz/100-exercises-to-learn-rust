@@ -7,37 +7,41 @@
 struct Ticket {
     title: String,
     description: String,
-    status: String,
+    status: Status,
 }
 
+#[derive(Clone, Copy, PartialEq ,Debug)]
 enum Status {
     // TODO: add the missing variants
+    ToDo,
+    InProgress,
+    Done,
 }
 
 impl Ticket {
-    pub fn new(title: String, description: String, status: String) -> Ticket {
-        if title.is_empty() {
-            panic!("Title cannot be empty");
-        }
-        if title.len() > 50 {
-            panic!("Title cannot be longer than 50 bytes");
-        }
-        if description.is_empty() {
-            panic!("Description cannot be empty");
-        }
-        if description.len() > 500 {
-            panic!("Description cannot be longer than 500 bytes");
-        }
-        if status != "To-Do" && status != "In Progress" && status != "Done" {
-            panic!("Only `To-Do`, `In Progress`, and `Done` statuses are allowed");
-        }
+    // pub fn new(title: String, description: String, status: String) -> Ticket {
+    //     if title.is_empty() {
+    //         panic!("Title cannot be empty");
+    //     }
+    //     if title.len() > 50 {
+    //         panic!("Title cannot be longer than 50 bytes");
+    //     }
+    //     if description.is_empty() {
+    //         panic!("Description cannot be empty");
+    //     }
+    //     if description.len() > 500 {
+    //         panic!("Description cannot be longer than 500 bytes");
+    //     }
+    //     if status != "To-Do" && status != "In Progress" && status != "Done" {
+    //         panic!("Only `To-Do`, `In Progress`, and `Done` statuses are allowed");
+    //     }
 
-        Ticket {
-            title,
-            description,
-            status,
-        }
-    }
+    //     Ticket {
+    //         title,
+    //         description,
+    //         //status,
+    //     }
+    // }
 
     pub fn title(&self) -> &String {
         &self.title
@@ -47,7 +51,7 @@ impl Ticket {
         &self.description
     }
 
-    pub fn status(&self) -> &String {
+    pub fn status(&self) -> &Status {
         &self.status
     }
 }
