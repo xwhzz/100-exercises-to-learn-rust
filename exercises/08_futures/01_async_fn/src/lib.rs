@@ -1,3 +1,5 @@
+use std::future::IntoFuture;
+
 use tokio::net::TcpListener;
 use tokio::io::copy;
 
@@ -13,9 +15,11 @@ use tokio::io::copy;
 // - `tokio::io::copy` to copy data from the reader to the writer
 pub async fn echo(listener: TcpListener) -> Result<(), anyhow::Error> {
     // todo!()
-    let mut connection = listener.accept().await?;
-    let (mut reader, mut writer) = connection.0.split();
-    let _res = copy(&mut reader, &mut writer).await?;
+    loop {
+        let mut connection = listener.accept().await?;
+        let (mut reader, mut writer) = connection.0.split();
+        let _res = copy(&mut reader, &mut writer).await?;
+    }
     Ok(())
 }
 
@@ -26,10 +30,9 @@ mod tests {
 
     #[tokio::test]
     async fn test_echo() {
-        let listener = TcpListener::bind("127.0.0.1:7890").await.unwrap();
+        let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
         let addr = listener.local_addr().unwrap();
         tokio::spawn(echo(listener));
-
         let requests = vec!["hello", "world", "foo", "bar"];
 
         for request in requests {
